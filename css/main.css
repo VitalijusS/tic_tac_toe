@@ -1,0 +1,50 @@
+body,
+body * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+/* 
+#dcb88a 
+#0d6164
+*/
+body {
+    background-color: #629ea0;
+    width: 100%;
+    height: 100vh;
+}
+main {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5rem;
+    align-items: center;
+    gap: 2rem;
+}
+h1 {
+    font-size: 6rem;
+    width: 70%;
+    border-bottom: 3px dashed #dcb88a;
+    text-align: center;
+}
+.scoreBoard {
+    font-size: 6rem;
+    display: flex;
+    gap: 2rem;
+}
+.boardContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    font-size: 10rem;
+}
+.boardContainer .row .tile {
+    width: 200px;
+    width: 200px;
+    text-align: center;
+}
+.tile.border {
+    border-top: 5px solid #dcb88a;
+}
+.row.border2 {
+    border-right: 5px solid #dcb88a;
+}
