@@ -21,13 +21,13 @@ main {
     gap: 2rem;
 }
 h1 {
-    font-size: 6rem;
+    font-size: 5rem;
     width: 70%;
     border-bottom: 3px dashed #dcb88a;
     text-align: center;
 }
 .scoreBoard {
-    font-size: 6rem;
+    font-size: 5rem;
     display: flex;
     gap: 2rem;
 }
@@ -37,8 +37,8 @@ h1 {
     font-size: 10rem;
 }
 .boardContainer .row .tile {
-    height: 200px;
-    width: 200px;
+    height: 180px;
+    width: 180px;
     text-align: center;
 }
 
@@ -49,7 +49,7 @@ h1 {
     border-right: 5px solid #dcb88a;
 }
 .winMessageContainer {
-    font-size: 5rem;
+    font-size: 4rem;
     display: flex;
     gap: 2rem;
 }
