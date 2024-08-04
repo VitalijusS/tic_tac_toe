@@ -3,6 +3,7 @@ export class TicTacToe {
         this.scoresDOM = document.querySelectorAll('.scoreBoard > p');
         this.tilesDOM = document.querySelectorAll('.tile');
         this.winMessageDOM = document.querySelector('.winMessageContainer');
+        this.activeTurnBubbleDOM = document.querySelectorAll('.scoreBoard > .turn');
 
         this.nextMove = "X";
         this.xSquares = [];
@@ -10,6 +11,7 @@ export class TicTacToe {
         this.isGameOver = false;
         this.localData = [0, 0];
 
+        this.nextMoveBubble();
         this.run();
     }
 
@@ -21,20 +23,20 @@ export class TicTacToe {
 
         this.showScore();
         if (localStorage.getItem('xSquares') === null || localStorage.getItem('oSquares') === null) {
-            localStorage.setItem('xSquares', JSON.stringify([]))
-            localStorage.setItem('oSquares', JSON.stringify([]))
+            localStorage.setItem('xSquares', JSON.stringify([]));
+            localStorage.setItem('oSquares', JSON.stringify([]));
         } else {
             if (JSON.parse(localStorage.getItem('xSquares')).length !== 0
                 || JSON.parse(localStorage.getItem('oSquares')).length !== 0) {
                 this.displayOldGame();
             }
-
         }
 
         for (let i = 0; i < this.tilesDOM.length; i++) {
             this.tilesDOM[i].addEventListener('click', () => {
                 if (this.tilesDOM[i].textContent === '' && !this.isGameOver) {
                     this.tilesDOM[i].textContent = this.add(i);
+                    this.nextMoveBubble();
                     this.checkIfNoWinner();
                     this.checkIfWin();
                 }
@@ -56,8 +58,26 @@ export class TicTacToe {
             <button class="resetGameBtn">Play again</button>
             <button class="resetScoreBtn">Reset score</button>
             `;
+        this.activeTurnBubbleDOM[0].style.backgroundColor = "transparent";
+        this.activeTurnBubbleDOM[1].style.backgroundColor = "transparent";
+        console.log(this.activeTurnBubbleDOM[1]);
+
         document.querySelector('.resetGameBtn').addEventListener('click', () => this.resetGame())
         document.querySelector('.resetScoreBtn').addEventListener('click', () => this.resetScore())
+    }
+
+    checkIfWin(refresh = false) {
+        if (this.check(this.xSquares)) {
+            refresh ? false : this.localData[0]++;
+            localStorage.setItem('score', JSON.stringify(this.localData));
+            this.showScore();
+
+        }
+        if (this.check(this.oSquares)) {
+            refresh ? false : this.localData[1]++;
+            localStorage.setItem('score', JSON.stringify(this.localData));
+            this.showScore();
+        }
     }
 
     check(squareList) {
@@ -69,23 +89,12 @@ export class TicTacToe {
                 console.log('winner');
                 this.weHaveAWinner(winCombination);
                 this.isGameOver = true;
+
+
                 return true;
             }
         }
         return false;
-    }
-
-    checkIfWin(refresh = false) {
-        if (this.check(this.xSquares)) {
-            refresh ? false : this.localData[0]++;
-            localStorage.setItem('score', JSON.stringify(this.localData));
-            this.showScore();
-        }
-        if (this.check(this.oSquares)) {
-            refresh ? false : this.localData[1]++;
-            localStorage.setItem('score', JSON.stringify(this.localData));
-            this.showScore();
-        }
     }
 
     resetGame() {
@@ -97,12 +106,14 @@ export class TicTacToe {
         this.oSquares = [];
         this.xSquares = [];
         this.nextMove = 'X';
+        this.nextMoveBubble();
         this.winMessageDOM.innerHTML = '';
         localStorage.setItem('xSquares', JSON.stringify([]))
         localStorage.setItem('oSquares', JSON.stringify([]))
     }
 
     add(i) {
+
         if (this.nextMove === 'X') {
             this.nextMove = 'O';
             this.xSquares.push(i);
@@ -144,13 +155,23 @@ export class TicTacToe {
     displayOldGame() {
         this.xSquares = JSON.parse(localStorage.getItem('xSquares'));
         this.oSquares = JSON.parse(localStorage.getItem('oSquares'));
-        this.xSquares.forEach(index => this.tilesDOM[index].textContent = 'X')
-        this.oSquares.forEach(index => this.tilesDOM[index].textContent = 'O')
-        this.checkIfNoWinner();
-        this.checkIfWin(true);
+        this.xSquares.forEach(index => this.tilesDOM[index].textContent = 'X');
+        this.oSquares.forEach(index => this.tilesDOM[index].textContent = 'O');
         if (this.xSquares.length > this.oSquares.length) {
             this.nextMove = 'O';
         }
+        this.nextMoveBubble();
+        this.checkIfNoWinner();
+        this.checkIfWin(true);
     }
 
+    nextMoveBubble() {
+        if (this.nextMove === 'X') {
+            this.activeTurnBubbleDOM[0].style.backgroundColor = "yellow";
+            this.activeTurnBubbleDOM[1].style.backgroundColor = "transparent";
+        } else {
+            this.activeTurnBubbleDOM[0].style.backgroundColor = "transparent";
+            this.activeTurnBubbleDOM[1].style.backgroundColor = "yellow";
+        }
+    }
 }
