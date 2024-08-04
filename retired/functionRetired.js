@@ -1,5 +1,5 @@
 
-
+// old code
 const scoresDOM = document.querySelectorAll('.scoreBoard > p');
 const tilesDOM = document.querySelectorAll('.tile');
 const winMessageDOM = document.querySelector('.winMessageContainer');
