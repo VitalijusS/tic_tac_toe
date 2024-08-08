@@ -10,6 +10,8 @@ export class TicTacToe {
         this.oSquares = [];
         this.isGameOver = false;
         this.localData = [0, 0];
+        this.highlight = 4;
+
 
         this.nextMoveBubble();
         this.run();
@@ -19,7 +21,6 @@ export class TicTacToe {
         if (localStorage.getItem('score') !== null) {
             this.localData = JSON.parse(localStorage.getItem('score'));
         }
-        localStorage.setItem('score', JSON.stringify(this.localData));
 
         this.showScore();
         if (localStorage.getItem('xSquares') === null || localStorage.getItem('oSquares') === null) {
@@ -41,12 +42,65 @@ export class TicTacToe {
                     this.checkIfWin();
                 }
             })
-            document.querySelector('body').addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
-                    this.resetGame(this.tilesDOM);
-                }
-            })
         }
+        document.querySelector('body').addEventListener('keyup', (event) => {
+            if (event.key === 'Escape') {
+                this.resetGame(this.tilesDOM);
+            }
+            if (!this.isGameOver) {
+                if (event.key === 'w') {
+                    if (this.validHighlightSquare('-', 1)) {
+                        this.highlight -= 1;
+                        this.moveHighlightSquare(this.highlight);
+                    }
+                }
+                if (event.key === 's') {
+                    if (this.validHighlightSquare('+', 1)) {
+                        this.highlight += 1;
+                        this.moveHighlightSquare(this.highlight);
+                    }
+                }
+                if (event.key === 'd') {
+                    if (this.validHighlightSquare('+', 3)) {
+                        this.highlight += 3;
+                        this.moveHighlightSquare(this.highlight);
+                    }
+                }
+                if (event.key === 'a') {
+                    if (this.validHighlightSquare('-', 3)) {
+                        this.highlight -= 3;
+                        this.moveHighlightSquare(this.highlight);
+                    }
+                }
+                if (event.key === ' ') {
+                    if (this.tilesDOM[this.highlight].textContent === '' && !this.isGameOver) {
+                        this.tilesDOM[this.highlight].textContent = this.add(this.highlight);
+                        this.nextMoveBubble();
+                        this.checkIfNoWinner();
+                        this.checkIfWin();
+                    }
+
+                }
+            }
+
+        })
+    }
+
+    validHighlightSquare(operation, num) {
+        if (operation === '-' && this.highlight - num >= 0) {
+            return true;
+        }
+        if (operation === '+' && this.highlight + num <= 8) {
+            return true;
+        }
+        return false;
+    }
+
+    moveHighlightSquare(square) {
+        for (const tile of this.tilesDOM) {
+            tile.style.backgroundColor = '#629ea0';
+        }
+        this.tilesDOM[square].style.backgroundColor = '#659ef6';
     }
 
     weHaveAWinner(list) {
@@ -60,7 +114,6 @@ export class TicTacToe {
             `;
         this.activeTurnBubbleDOM[0].style.backgroundColor = "transparent";
         this.activeTurnBubbleDOM[1].style.backgroundColor = "transparent";
-        console.log(this.activeTurnBubbleDOM[1]);
 
         document.querySelector('.resetGameBtn').addEventListener('click', () => this.resetGame())
         document.querySelector('.resetScoreBtn').addEventListener('click', () => this.resetScore())
@@ -86,11 +139,8 @@ export class TicTacToe {
             if (squareList.filter(num => num === winCombination[0]
                 || num === winCombination[1]
                 || num === winCombination[2]).length >= 3) {
-                console.log('winner');
                 this.weHaveAWinner(winCombination);
                 this.isGameOver = true;
-
-
                 return true;
             }
         }
@@ -110,10 +160,13 @@ export class TicTacToe {
         this.winMessageDOM.innerHTML = '';
         localStorage.setItem('xSquares', JSON.stringify([]))
         localStorage.setItem('oSquares', JSON.stringify([]))
+        for (const tile of this.tilesDOM) {
+            tile.style.backgroundColor = '#629ea0';
+        }
+        this.highlight = 4;
     }
 
     add(i) {
-
         if (this.nextMove === 'X') {
             this.nextMove = 'O';
             this.xSquares.push(i);
@@ -175,3 +228,4 @@ export class TicTacToe {
         }
     }
 }
+
